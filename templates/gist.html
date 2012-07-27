@@ -19,8 +19,93 @@
 {% block js %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="{{ STATIC_URL }}static/js/libs/jquery-1.7.2.min.js"><\/script>')</script>
-<script src="{{ STATIC_URL }}static/js/gistio.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="https://raw.github.com/HPNeo/gmaps/master/gmaps.js"></script>
 <script>
+    var loadMaps = function() {
+        $('.map').each(function(index) {
+              var kml = $(this).attr('data');
+              $(this).before("<div id=map-"+kml+"></div>");
+
+              infoWindow = new google.maps.InfoWindow({});
+              map = new GMaps({
+                div: '#map-'+kml,
+                zoom: 12,
+                lat: 40.65,
+                lng: -73.95
+              });
+              map.loadFromKML({
+                url: 'https://dl.dropbox.com/u/67271774/gr5/'+kml+'.kml',
+                suppressInfoWindows: true,
+                events: {
+                  click: function(point){
+                    alert(point.featureData.infoWindowHtml);
+                    infoWindow.setContent(point.featureData.infoWindowHtml);
+                    infoWindow.setPosition(point.latLng);
+                    infoWindow.open(map.map);
+                  }
+                }
+              });
+        });
+    };
+
+    var Gisted = (function($, undefined) {
+        var gist = function(gist_id) {
+            var gistxhr = $.getJSON('/' + gist_id + '/content')
+                .done(function(data, textStatus, xhr) {
+                    var description = data['description'];
+                    if (description) {
+                        $("#description").text(description);
+                    } else {
+                        $("#description").text('');
+                    }
+                    var files = data['files'];
+                    var keys = Object.keys(files);
+                    var empty = true;
+                    for (var i=0; i<keys.length; i++) {
+                        var file = files[keys[i]];
+                        if (file['rendered']) {
+                            empty = false;
+                            var filediv = $('<article>')
+                                .attr('class', 'file')
+                                .attr('data-filename', file['filename']);
+                            filediv.html("<h1>" + file['filename'] + "</h1>" + file['rendered']);
+                            $('#gistbody').append(filediv);
+                        }
+                    }
+                    if (empty) {
+                        apologize("No Content Found");
+                    }
+
+                    if (xhr.getResponseHeader("X-Cache-Hit") == "True") {
+                        mixpanel.track("Cache Hit");
+                    } else {
+                        mixpanel.track("Cache Miss");
+                    }
+                    loadMaps();
+                })
+                .fail(function(xhr, status, error) {
+                    if (xhr.status == 404) {
+                        apologize("No Content Found");
+                    } else {
+                        apologize("Unable to Fetch Gist");
+                    }
+                })
+                .always(function() {
+                    $("#description").removeClass("loading");
+                    $(".content>footer").fadeIn();
+                });
+        };
+        var apologize = function(errorText) {
+            $("#description").text(errorText);
+            var apology = $('<p>').attr('class', 'apology').text("Quite flummoxed. Terribly sorry.");
+            $('#gistbody').append(apology);
+        };
+        return {
+            gist: gist
+        };
+    })(jQuery);
+
     $(function() {
         Gisted.gist({{gist_id}});
     });
@@ -28,6 +113,11 @@
 {% endblock js %}
 
 {% block extra_head %}
+<style type="text/css">
+div[id|="map"] {
+    height: 300px;
+}
+</style>
 <!-- start Mixpanel --><script type="text/javascript">(function(c,a){var b,d,h,e;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===c.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?g=
 a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.set people.increment".split(" ");for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1;window.mixpanel=a})(document,window.mixpanel||[]);
 mixpanel.init("cdccad1e2f832db3db36d2168356aac8");</script><!-- end Mixpanel -->
