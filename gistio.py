@@ -46,7 +46,7 @@ ALLOWED_ATTRIBUTES = {
 
 @app.route('/')
 def homepage():
-    return render_template('home.html', static_url=STATIC_URL)
+    return render_template('gist.html', gist_id=3184547, static_url=STATIC_URL)
 
 
 @app.route('/<int:id>')
