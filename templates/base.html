@@ -7,11 +7,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>{% block title %}gist.io{% endblock %}</title>
-    <link rel="shortcut icon" href="{{ STATIC_URL }}static/img/favicon.ico" />
+    <link rel="shortcut icon" href="https://s3.amazonaws.com/gistio/img/favicon.ico" />
     <meta name="description" content="gist.io: writing for hackers.">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href='//fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700|Alegreya+SC:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{ STATIC_URL }}static/css/screen.css">
+    <link rel="stylesheet" href="https://s3.amazonaws.com/gistio/css/screen.css">
+    <link href="https://s3.amazonaws.com/gistio/css/modal.css" rel="stylesheet">
     {% block extra_head %}
     {% endblock extra_head %}
 </head>

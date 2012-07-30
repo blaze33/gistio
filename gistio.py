@@ -19,13 +19,13 @@ if HEROKU:
                         port=redis_url.port,
                         password=redis_url.password)
     PORT = int(os.environ.get('PORT', 5000))
-    STATIC_URL = '//static.gist.io/'
+    STATIC_URL = 'https://s3.amazonaws.com/gistio/'
 else:
     cache = StrictRedis()  # local development
     PORT = 5000
     STATIC_URL = ''
 
-CACHE_EXPIRATION = 60  # seconds
+CACHE_EXPIRATION = 1  # seconds
 
 RENDERABLE = [u'Markdown', u'Text']
 
