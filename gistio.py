@@ -25,7 +25,7 @@ else:
     PORT = 5000
     STATIC_URL = ''
 
-CACHE_EXPIRATION = 1  # seconds
+CACHE_EXPIRATION = 60  # seconds
 
 RENDERABLE = [u'Markdown', u'Text']
 
