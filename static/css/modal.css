@@ -1,3 +1,10 @@
+hr {
+    border: 0;
+    background-color: #EEE;
+    color: #EEE;
+    border-top: 1px solid #EEE;
+    margin-top: 3em;
+}
 
 .hide {
   display: none;
