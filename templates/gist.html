@@ -70,9 +70,7 @@
                 suppressInfoWindows: true,
                 events: {
                   click: function(point){
-                    alert(point.featureData.infoWindowHtml);
                     $('#modal-body').html(point.featureData.infoWindowHtml)
-                    alert($('#modal-body div div:first-child').html());
                     $('#modal-header').html($('#modal-body div div:first-child').removeAttr('style'));
                     $('#myModal').modal('show')
                   }
