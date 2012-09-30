@@ -48,6 +48,9 @@ ALLOWED_ATTRIBUTES = {
 def homepage():
     return render_template('gist.html', gist_id=3184547, static_url=STATIC_URL)
 
+@app.route('/google009a062b2cd3a7e6.html')
+def google_site_verification():
+    return 'google-site-verification: google009a062b2cd3a7e6.html'
 
 @app.route('/<int:id>')
 def render_gist(id):
